@@ -5,11 +5,117 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>唐诗三百首</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .box {
+      max-width: 750px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .content {
+      margin-top: 20px;
+    }
+
+    .content p {
+      line-height: 2;
+      font-size: 20px;
+      font-weight: bolder;
+    }
+
+    .btn {
+      margin-top: 20px;
+      text-align: right;
+      position: fixed;
+      bottom: 10vh;
+      left: 0;
+      right: 20px;
+    }
+
+    .btn button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: #3366ff;
+      color: #fff;
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
-
+  <div class="box"></div>
 </body>
+<script>
+  init()
+  function init() {
+    getJSon();
+  }
+
+  // 随机获取1-321的整数
+  function getRandom() {
+    return Math.floor(Math.random() * 321 + 1);
+  }
+  // 获取json数据
+  function getJSon() {
+    const index = getRandom();
+    fetch(`./json/${index}.json`).then(res => res.json()).then(res => {
+      console.log(res);
+      // if (res.content.length !== 4) {
+      //   return getJSon();
+      // }
+      const box = document.querySelector('.box');
+      box.innerHTML = `
+        <h1>${res.title}</h1>
+        <h3>${res.auth}</h3>
+        <h6>${res.type}</h6>
+        <div class="content">
+          ${res.content.map(item => {
+        return `<p>${item}</p>`
+      }).join('')
+        }         
+        </div >
+
+        <div class="btn">
+          <button onclick="getJSon()">下一个</button>
+        </div>
+
+       <div>
+        ${res.desc}
+        </div>
+      `
+      scrollToTop();
+    })
+  }
+
+  // 根据内容，随机打乱顺序，返回新的数组
+  function randomArr(arr) {
+    const newArr = [];
+    while (arr.length) {
+      const index = Math.floor(Math.random() * arr.length);
+      newArr.push(arr[index]);
+      arr.splice(index, 1);
+    }
+    return newArr;
+  }
+
+  // 切换题目 滚动条回到顶部
+  function scrollToTop() {
+    const timer = setInterval(() => {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const ispeed = Math.floor(-scrollTop / 6);
+      if (scrollTop === 0) {
+        clearInterval(timer);
+      }
+      document.documentElement.scrollTop = document.body.scrollTop = scrollTop + ispeed;
+    }, 30)
+  }
+</script>
 
 </html>
