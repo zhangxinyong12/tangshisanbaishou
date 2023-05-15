@@ -1,0 +1,6 @@
+{
+	"dependencies": {
+		"jsdom": "^22.0.0",
+		"fs-extra": "^11.1.1"
+	}
+}
